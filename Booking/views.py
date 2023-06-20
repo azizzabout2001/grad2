@@ -2,11 +2,28 @@ from django.shortcuts import get_object_or_404, render
 
 # Create your views here.
 from rest_framework.generics import GenericAPIView
-from Booking.models import providerSchedule,ReservationInfo
-from my_users.models import provider,Recipient
-from .serializer import Rating_Serializer, Service_Info_Serializer, Reservation_Serializer,TimeSlotSerializer 
+from Booking.models import providerSchedule,ReservationInfo,Notification
+from my_users.models import provider,Recipient,CustomUser
+from .serializer import Rating_Serializer, Service_Info_Serializer, Reservation_Serializer,TimeSlotSerializer ,NotificationSerializer
 from rest_framework.response import Response
 from rest_framework import status
+
+class NotificationViewSet(GenericAPIView):
+    serializer_class = NotificationSerializer
+    def get(self, request):
+        data=request.data
+        user_id = data.get("user")
+        if not user_id:
+            raise IndexError("Wrong ID. Please provide a valid user ID.")
+        user=CustomUser.objects.get(pk=user_id)       
+        queryset = Notification.objects.filter(user=user)
+        if not queryset:
+            raise IndexError("user dont have any notification message.")
+        serializer = self.serializer_class(queryset, many=True)
+        response_data = serializer.data
+        response = Response(response_data, status=status.HTTP_200_OK)
+        queryset.update(is_read=True)
+        return response
 
 class ServiceRating(GenericAPIView):
     serializer_class = Rating_Serializer

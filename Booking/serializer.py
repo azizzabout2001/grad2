@@ -2,8 +2,16 @@ from django.utils import timezone
 from django.db import IntegrityError
 from rest_framework import serializers
 from django.contrib.auth.hashers import check_password
-from .models import TimeSlot, service_Info, ReservationInfo, providerSchedule ,Rating
-from my_users.models import provider, Recipient
+from .models import TimeSlot, service_Info, ReservationInfo, providerSchedule ,Rating ,Notification
+from my_users.models import provider, Recipient , CustomUser
+
+class NotificationSerializer(serializers.ModelSerializer):
+    user_type = serializers.CharField(source='get_user_type_display', read_only=True)
+    user = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
+    
+    class Meta:
+        model = Notification
+        fields = '__all__'
 
 class Rating_Serializer(serializers.ModelSerializer):
     class Meta:
@@ -123,6 +131,19 @@ class Reservation_Serializer(serializers.ModelSerializer):
         except IntegrityError:
             raise serializers.ValidationError(
                 "An error occurred while creating the reservation Info.")
+        #
+        #
+        #Notification
+        
+        provider_message = f"A new reservation has been made by {recipient_instance.username}"
+        Notification.objects.create(user_type='provider', user=provider_instance, message=provider_message)
+
+            # Send notification to recipient
+        recipient_message = "Your reservation has been created successfully"
+        Notification.objects.create(user_type='recipient', user=recipient_instance, message=recipient_message)
+        #
+        #
+            #Notification
         return reservationInfo
 
     def validate(self, attrs):
