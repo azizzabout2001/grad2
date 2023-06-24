@@ -2,8 +2,18 @@ from django.utils import timezone
 from django.db import IntegrityError
 from rest_framework import serializers
 from django.contrib.auth.hashers import check_password
-from .models import TimeSlot, service_Info, ReservationInfo, providerSchedule ,Rating ,Notification
+from .models import TimeSlot, service_Info, ReservationInfo, providerSchedule ,Rating ,Notification ,Service_category,Service_domain
 from my_users.models import provider, Recipient , CustomUser
+
+class category_serializers(serializers.ModelSerializer):
+    class Meta:
+        model = Service_category
+        fields = '__all__'
+
+class domain_serializers(serializers.ModelSerializer):
+    class Meta:
+        model = Service_domain
+        fields = '__all__'
 
 class NotificationSerializer(serializers.ModelSerializer):
     user_type = serializers.CharField(source='get_user_type_display', read_only=True)
@@ -72,6 +82,7 @@ class Service_Info_Serializer(serializers.ModelSerializer):
         provider_id = validated_data.get('provider')
         if provider_id:
             provider_con = provider.objects.get(pk=provider_id.id)
+            #category_con = Service_category.objects.get (pk=)
             validated_data['provider'] = provider_con
         else:
             raise serializers.ValidationError("No ID was given.")

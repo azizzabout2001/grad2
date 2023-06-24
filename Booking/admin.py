@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.safestring import mark_safe
-from .models import providerSchedule , Service_category ,ReservationInfo
+from .models import providerSchedule , Service_category ,ReservationInfo,Service_domain
 class providerschAdmin (admin.ModelAdmin):
     filter_horizontal=()
     list_filter= ()
@@ -34,5 +34,14 @@ class servicecategoryAdmin (admin.ModelAdmin):
     list_display = ('id','category')
     
 admin.site.register(Service_category,servicecategoryAdmin)   
+
+
+class serviceDomainAdmin (admin.ModelAdmin):
+    filter_horizontal=()
+    list_filter= ()
+    fieldsets=()
+    list_display = ('id','domain')
+    
+admin.site.register(Service_domain,serviceDomainAdmin) 
 
 # Register your models here.

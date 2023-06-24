@@ -6,10 +6,6 @@ from django.utils import timezone
 from django.contrib.postgres.fields import ArrayField 
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-
-    
-    
-    
 '''
 
     # booked_time=[(models.DateTimeField(),models.DateTimeField())]
@@ -58,6 +54,9 @@ SEVICE_TYPE_CHOICES = (
     category = models.CharField(max_length=22, choices=SEVICE_TYPE_CHOICES)
     """
 
+class Service_domain(models.Model):
+    domain = models.CharField(max_length=100,unique=True)    
+
 class Service_category(models.Model):
     category = models.CharField(max_length=100,unique=True) 
     #service_Info = models.ForeignKey(service_Info, on_delete=models.CASCADE, related_name=' service  category ')
@@ -65,11 +64,13 @@ class Service_category(models.Model):
 
 class service_Info (models.Model):
     #must add a list of service_Info in user (provider)
+    domain = models.ForeignKey(Service_domain , default=1 , on_delete=models.CASCADE , related_name='service_domain')
     provider = models.ForeignKey(provider, on_delete=models.CASCADE, related_name='create_as_provider')
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
     price = models.IntegerField(default=0)
     category =  models.ForeignKey(Service_category,default=1, on_delete=models.CASCADE, related_name='service_category')
+    
     #ask hesho how react deals with maps  ()'''
     #domain = 'amman'
     #pictures ="" 
@@ -100,14 +101,9 @@ class ReservationInfo(models.Model):
     def __str__(self):
         return f'Reservation for {self.recipient} - {self.service_Info}'
     
-
-
-
 class providerSchedule(models.Model):
     provider = models.OneToOneField(provider, on_delete=models.CASCADE, related_name='schedule')
     TimeSlot =  models.ManyToManyField('TimeSlot', related_name='schedules')
-
-
 
 class TimeSlot(models.Model):
         schedule = models.ForeignKey(providerSchedule, on_delete=models.CASCADE, related_name='time_slots', default=None)
@@ -115,6 +111,7 @@ class TimeSlot(models.Model):
         end_time = models.DateTimeField(default=timezone.now)
 
 class Rating (models.Model):
+
     recipient=models.ForeignKey(Recipient,on_delete=models.CASCADE,related_name='customer')
     reservation=models.ForeignKey(ReservationInfo,on_delete=models.CASCADE,related_name='rating')
     score = models.IntegerField(default=0,
@@ -123,3 +120,4 @@ class Rating (models.Model):
             MinValueValidator(1),
         ]
     )
+

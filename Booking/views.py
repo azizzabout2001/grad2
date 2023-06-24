@@ -2,11 +2,31 @@ from django.shortcuts import get_object_or_404, render
 
 # Create your views here.
 from rest_framework.generics import GenericAPIView
-from Booking.models import providerSchedule,ReservationInfo,Notification
+from Booking.models import Service_domain, providerSchedule,ReservationInfo,Notification,service_Info,Service_category
 from my_users.models import provider,Recipient,CustomUser
-from .serializer import Rating_Serializer, Service_Info_Serializer, Reservation_Serializer,TimeSlotSerializer ,NotificationSerializer
+from .serializer import Rating_Serializer, Service_Info_Serializer, Reservation_Serializer,TimeSlotSerializer ,NotificationSerializer,category_serializers, domain_serializers
 from rest_framework.response import Response
 from rest_framework import status
+from . import serializer
+
+class allcategory (GenericAPIView):
+    def get (self,request):
+        all_category = Service_category.objects.all()
+        serializer = category_serializers(all_category,many=True)
+        return Response(serializer.data,status= status.HTTP_200_OK)
+
+class ServicesByCategory (GenericAPIView):
+    def get (self, request):
+        data=request.data
+        #categoryserializer = serializer.category_serializers(data=data)
+        category =  request.data['category']
+        try:
+            all_sevices = service_Info.objects.filter(category=category)
+            serializer = Service_Info_Serializer(all_sevices, many=True)
+        except: 
+            all_sevices = service_Info.objects.all()
+            serializer = Service_Info_Serializer(all_sevices, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class NotificationViewSet(GenericAPIView):
     serializer_class = NotificationSerializer
@@ -52,8 +72,6 @@ class RecipientBookedServices(GenericAPIView):
         reservations =  ReservationInfo.objects.filter( recipient=resipient_instence)
         serializer = Reservation_Serializer(reservations, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
 
 class ListNewService(GenericAPIView):
     serializer_class = Service_Info_Serializer
@@ -123,3 +141,25 @@ class View_Provider_Booked_times(GenericAPIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class alldomain (GenericAPIView):
+    def get (self,request):
+        all_domain = Service_domain.objects.all()
+        serializer = domain_serializers(all_domain,many=True)
+        return Response(serializer.data,status= status.HTTP_200_OK)
+    
+class ServicesProviderByCategory (GenericAPIView):
+    def get (self, request):
+        data=request.data
+        category =  request.data['category']
+        provider_id=request.data['provider']
+        provider_instance=provider.objects.get(pk=provider_id)
+
+        try:
+            all_sevices = service_Info.objects.filter(provider=provider_instance)
+        except: raise   KeyError
+        try:
+            all_sevices = all_sevices.filter(category=category)
+        except :
+            pass
+        serializer = Service_Info_Serializer(all_sevices, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)    
