@@ -19,6 +19,7 @@
     
 }
 
+newService
 {
     "title": 
         "0987asdzxc"
@@ -34,41 +35,70 @@
 
 }
 
-{
-    "title": 
-        "0987asdzxc"
-    ,
-    "description": 
-        "aziz@zabout.com"
-    ,
-    "price": 
-        "000"
-    ,
-    "provider": 
-        "aziz"
-
-}
 
 
+newReservation
 {
     "recipient": 
         "7"
     ,
     "service_Info": 
         "1"
-    
+    ,
+    "start_time":
+    "2023-06-15T11:00:00"
+    ,
+    "end_time": 
+    "2023-06-15T12:00:00"
 }
 
 
+providebooked
+{
+    "provider": 
+          "6"
+  }
 
+returnRecipintReservations
+{
+    "recipient":
+    "7" 
+    
+
+}
+
+setRating
 {
     "recipient":
     "7" 
     ,
     "reservation":
-    "7"
+    "4"
     ,
     "score":
     "5"
+
+}
+
+ServiceByCategory
+{
+    "category":
+    "1" 
+ 
+}
+
+book/allcategory
+empty Get
+
+/book/alldomain
+empty Get
+
+book/ServiceProviderByCategory
+{
+    "category":
+    "1" 
+    ,
+    "provider": 
+        "6"
 
 }

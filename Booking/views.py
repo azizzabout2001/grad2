@@ -8,18 +8,23 @@ from .serializer import Rating_Serializer, Service_Info_Serializer, Reservation_
 from rest_framework.response import Response
 from rest_framework import status
 from . import serializer
+from django.utils import timezone
+import datetime
+
 
 class allcategory (GenericAPIView):
     def get (self,request):
         all_category = Service_category.objects.all()
         serializer = category_serializers(all_category,many=True)
-        return Response(serializer.data,status= status.HTTP_200_OK)
+        pairs = [(item["id"], item["category"]) for item in serializer.data]
+        return Response(pairs,status= status.HTTP_200_OK)
 
 class ServicesByCategory (GenericAPIView):
     def get (self, request):
         data=request.data
         #categoryserializer = serializer.category_serializers(data=data)
-        category =  request.data['category']
+        #category =  request.data['category']
+        category = request.query_params.get('category')
         try:
             all_sevices = service_Info.objects.filter(category=category)
             serializer = Service_Info_Serializer(all_sevices, many=True)
@@ -32,7 +37,7 @@ class NotificationViewSet(GenericAPIView):
     serializer_class = NotificationSerializer
     def get(self, request):
         data=request.data
-        user_id = data.get("user")
+        user_id = request.query_params.get('user')
         if not user_id:
             raise IndexError("Wrong ID. Please provide a valid user ID.")
         user=CustomUser.objects.get(pk=user_id)       
@@ -65,13 +70,35 @@ class ServiceRating(GenericAPIView):
 class RecipientBookedServices(GenericAPIView):
     def get (self,request):
         data = request.data
-        Recipient_id = request.data['recipient']
+        Recipient_id = request.query_params.get('recipient')
+        #Recipient_id = request.data['recipient']
         if not Recipient_id:
             return Response({'error': 'Recipient ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
         resipient_instence = Recipient.objects.get(pk=Recipient_id)
         reservations =  ReservationInfo.objects.filter( recipient=resipient_instence)
-        serializer = Reservation_Serializer(reservations, many=True)
+        filtered_reservations = []
+        for  reservation in reservations :
+            if reservation.start_time < timezone.now():
+                filtered_reservations.append(reservation)
+        serializer = Reservation_Serializer(filtered_reservations, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class RecipientFutureServices(GenericAPIView):
+    def get (self,request):
+        data = request.data
+        Recipient_id = request.query_params.get('recipient')
+        #Recipient_id = request.data['recipient']
+        if not Recipient_id:
+            return Response({'error': 'Recipient ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        resipient_instence = Recipient.objects.get(pk=Recipient_id)
+        reservations =  ReservationInfo.objects.filter( recipient=resipient_instence)
+        filtered_reservations = []
+        for  reservation in reservations :
+            if reservation.start_time > timezone.now():
+                filtered_reservations.append(reservation)
+        serializer = Reservation_Serializer(filtered_reservations, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)    
 
 class ListNewService(GenericAPIView):
     serializer_class = Service_Info_Serializer
@@ -116,7 +143,8 @@ class View_Provider_Booked_times(GenericAPIView):
     def get(self , request):
         data = request.data
         #serializer = provider_Schedule_Serializer(data=data)
-        provider_id = request.data['provider']
+        #provider_id = request.data['provider']
+        provider_id = request.query_params.get('provider')
         if not provider_id:
             return Response({'error': 'provider ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
         #serializer VS request
@@ -145,13 +173,16 @@ class alldomain (GenericAPIView):
     def get (self,request):
         all_domain = Service_domain.objects.all()
         serializer = domain_serializers(all_domain,many=True)
-        return Response(serializer.data,status= status.HTTP_200_OK)
+        pairs = {item["id"]: item["domain"] for item in serializer.data}
+        return Response(pairs,status= status.HTTP_200_OK)
     
 class ServicesProviderByCategory (GenericAPIView):
     def get (self, request):
         data=request.data
-        category =  request.data['category']
-        provider_id=request.data['provider']
+        #category =  request.data['category']
+        #provider_id=request.data['provider']
+        category = request.query_params.get('category')
+        provider_id = request.query_params.get('provider')
         provider_instance=provider.objects.get(pk=provider_id)
 
         try:

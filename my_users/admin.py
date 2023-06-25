@@ -8,7 +8,7 @@ class CustomUserAdmin (UserAdmin):
     fieldsets=()
     list_display = ('id','email','username','password',
                     'usertype','first_name','last_name'
-                    ,'is_active','is_admin','is_superuser')
+                    ,'is_active','is_admin','is_superuser','phone_number')
 admin.site.register(CustomUser,CustomUserAdmin)    
 
 class providerAdmin (UserAdmin):
@@ -17,7 +17,7 @@ class providerAdmin (UserAdmin):
     fieldsets=()
     list_display = ('id','email','username','password',
                     'usertype','first_name','last_name'
-                    ,'is_active','is_admin','is_superuser','age')
+                    ,'is_active','is_admin','is_superuser','age','phone_number')
 admin.site.register(provider,providerAdmin)   
 
 class recipientAdmin (UserAdmin):
@@ -26,5 +26,5 @@ class recipientAdmin (UserAdmin):
     fieldsets=()
     list_display = ('id','email','username','password',
                     'usertype','first_name','last_name'
-                    ,'is_active','is_admin','is_superuser')
+                    ,'is_active','is_admin','is_superuser','phone_number')
 admin.site.register(Recipient,recipientAdmin) 

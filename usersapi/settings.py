@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-!ljyd4t1t)eddhv%ye!)puejzvr7f-^4l-e=6ni6e%g%g)lj#d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['5564-176-29-85-137.ngrok-free.app','127.0.0.1','c480-176-29-85-137.ngrok-free.app']
+ALLOWED_HOSTS = ['56f6-2a01-9700-148b-f400-d84-642-3159-54f8.ngrok-free.app','5564-176-29-85-137.ngrok-free.app','127.0.0.1','c480-176-29-85-137.ngrok-free.app']
 
 
 # Application definition
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'my_users',
     'Booking',
+    'django_extensions'
 
 ]
 #jwt

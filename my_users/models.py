@@ -50,17 +50,17 @@ class RecipientManager(BaseUserManager):
 
 class CustomUserManager(BaseUserManager):
 
-    def create_user(self,email,first_name,last_name,username,usertype, password=None):
+    def create_user(self,email,first_name,last_name,username,usertype,phone_number ,password=None):
         # Create and save a regular user with the given email and password
         
 
         if usertype == 'provider' :
             user = provider.objects.create_user(email=email, username=username, usertype=usertype,
-                                first_name=first_name, last_name=last_name)
+                                first_name=first_name, last_name=last_name,phone_number=phone_number)
             
         if usertype == 'recipient' :    
             user = Recipient.objects.create_user(email=email, username=username, usertype=usertype,
-                                first_name=first_name, last_name=last_name)
+                                first_name=first_name, last_name=last_name,phone_number=phone_number)
 
         user.set_password(password)        
         user.save(using=self._db)        
@@ -100,6 +100,8 @@ class CustomUser(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    phone_number = models.IntegerField(default=123456789)
+    
 
     USERNAME_FIELD = 'username' # must be unique pk 
     REQUIRED_FIELDS = ['email'] # when creating a super user 
