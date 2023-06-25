@@ -8,8 +8,7 @@ from django.urls import path
 
 urlpatterns = [
     # path(book),
-    path('newService', ListNewService.as_view() ),
-    path('newReservation', ListNewReservation.as_view() ), 
+    
     path('providebooked',View_Provider_Booked_times.as_view()),
     
     path ('setRating',views.ServiceRating.as_view()),
@@ -24,6 +23,10 @@ urlpatterns = [
     path ('returnRecipintFutureReservations',views.RecipientFutureServices.as_view() ),
     # provider ->
     path ('ServiceProviderByCategory',views.ServicesProviderByCategory.as_view()),
-            # we need view provider front send id back returns info
-    
+
+    #path ('ProviderHistory'),
+    #path ('Provider'),
+    path('newService', ListNewService.as_view() ),
+    path('newReservation', ListNewReservation.as_view() ), 
+    path ('SearchInServiceInfo',views.SearchInServiceInfo.as_view()),
 ]

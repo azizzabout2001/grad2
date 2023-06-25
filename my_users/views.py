@@ -5,6 +5,16 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import CustomUser ,provider, Recipient
 
+class ProviderInfo(GenericAPIView):
+    def get (self,request):
+        data = request.data
+        provider_id = request.query_params.get('provider')
+        #provider_id = data.get('provider')
+        
+        provider_instance=provider.objects.get(pk=provider_id)
+        serializer = ProviderSerializer(provider_instance)
+        return Response (serializer.data)
+
 class register (GenericAPIView): 
     serilaizer = CustomUserSerializer
 

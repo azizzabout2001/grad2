@@ -1,15 +1,34 @@
 from django.shortcuts import get_object_or_404, render
-
 # Create your views here.
 from rest_framework.generics import GenericAPIView
 from Booking.models import Service_domain, providerSchedule,ReservationInfo,Notification,service_Info,Service_category
 from my_users.models import provider,Recipient,CustomUser
-from .serializer import Rating_Serializer, Service_Info_Serializer, Reservation_Serializer,TimeSlotSerializer ,NotificationSerializer,category_serializers, domain_serializers
+from .serializer import (Rating_Serializer, Service_Info_Serializer, Reservation_Serializer,TimeSlotSerializer
+                            ,NotificationSerializer,category_serializers, domain_serializers)
 from rest_framework.response import Response
 from rest_framework import status
 from . import serializer
 from django.utils import timezone
 import datetime
+
+
+class SearchInServiceInfo (GenericAPIView):
+    def get (self, request):
+        data=request.data
+        category = request.query_params.get('category')
+        title = request.query_params.get('title')
+        #category =  request.data['category']
+        #title=request.data['title']
+        try:
+            all_sevices = service_Info.objects.filter(category=category, title__icontains=title)
+        except:
+            try:
+                all_sevices = service_Info.objects.filter(title__icontains=title)
+            except:
+                raise KeyError
+        serializer = Service_Info_Serializer(all_sevices, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class allcategory (GenericAPIView):

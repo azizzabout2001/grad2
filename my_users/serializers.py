@@ -26,9 +26,9 @@ class CustomUserSerializer (serializers.ModelSerializer):
 class ProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = provider
-        fields = ['id','email', 'username', 'first_name',
-                   'last_name', 'usertype', 'age', 'experience_years',
-                     'experience_details', 'rating','phone_number']
+        fields = ['id','email' ,'username', 'first_name',
+                'last_name', 'usertype', 'age', 'experience_years',
+                'experience_details', 'rating','phone_number']
 
 
 # login by user name         
