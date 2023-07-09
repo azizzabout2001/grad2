@@ -216,6 +216,13 @@ class Reservation_Serializer(serializers.ModelSerializer):
         return attrs
     
 
+class TimeSlotSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TimeSlot
+        fields = '__all__'
+
+
     '''
         '''
     '''
@@ -332,11 +339,6 @@ class Reservation_Serializer(serializers.ModelSerializer):
     '''
 
 
-class TimeSlotSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = TimeSlot
-        fields = '__all__'
 
 """"
 

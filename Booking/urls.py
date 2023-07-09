@@ -7,10 +7,7 @@ from django.urls import path
 #  we need : front sends -> sevice category,all   -> (back responds) with all of the service info of that category 
 
 urlpatterns = [
-    # path(book),
-    
     path('providebooked',View_Provider_Booked_times.as_view()),
-    
     path ('setRating',views.ServiceRating.as_view()),
     path('viewNotification' ,views.NotificationViewSet.as_view()),
     # recipient -> 
@@ -23,10 +20,13 @@ urlpatterns = [
     path ('returnRecipintFutureReservations',views.RecipientFutureServices.as_view() ),
     # provider ->
     path ('ServiceProviderByCategory',views.ServicesProviderByCategory.as_view()),
-
     #path ('ProviderHistory'),
     #path ('Provider'),
     path('newService', ListNewService.as_view() ),
     path('newReservation', ListNewReservation.as_view() ), 
     path ('SearchInServiceInfo',views.SearchInServiceInfo.as_view()),
+    path ('DeleteServiceInfo',views.DeleteServiceInfo.as_view()),
+    path ('returnProviderPastReservations',views.ProviderBookedServices.as_view() ),
+    #future  Provider
+    path ('returnProviderFutureServices',views.providerFutureServices.as_view() ),
 ]

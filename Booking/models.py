@@ -61,7 +61,6 @@ class Service_category(models.Model):
     category = models.CharField(max_length=100,unique=True) 
     #service_Info = models.ForeignKey(service_Info, on_delete=models.CASCADE, related_name=' service  category ')
 
-
 class service_Info (models.Model):
     #must add a list of service_Info in user (provider)
     domain = models.ForeignKey(Service_domain , default=1 , on_delete=models.CASCADE , related_name='service_domain')
@@ -70,9 +69,8 @@ class service_Info (models.Model):
     description = models.CharField(max_length=500)
     price = models.IntegerField(default=0)
     category =  models.ForeignKey(Service_category,default=1, on_delete=models.CASCADE, related_name='service_category')
-    
-    #ask hesho how react deals with maps  ()'''
-    #domain = 'amman'
+    is_deleted=models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
     #pictures ="" 
 
 class Notification(models.Model):
@@ -101,9 +99,13 @@ class ReservationInfo(models.Model):
     def __str__(self):
         return f'Reservation for {self.recipient} - {self.service_Info}'
     
+
+# so lets say the provider sets the time slot that he is av 
+#     
 class providerSchedule(models.Model):
     provider = models.OneToOneField(provider, on_delete=models.CASCADE, related_name='schedule')
     TimeSlot =  models.ManyToManyField('TimeSlot', related_name='schedules')
+    #Ave_time = models.ForeignKey(TimeSlot , on_delete= models.CASCADE,related_name= 'available_time')
 
 class TimeSlot(models.Model):
         schedule = models.ForeignKey(providerSchedule, on_delete=models.CASCADE, related_name='time_slots', default=None)

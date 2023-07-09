@@ -29,21 +29,21 @@ return user
 
 class providerManager(BaseUserManager):
 
-    def create_user(self,email,first_name,last_name,username,usertype, password=None):
+    def create_user(self,email,first_name,last_name,username,usertype,phone_number, password=None):
         # Create and save a regular user with the given email and password
             email = self.normalize_email(email)
             user = self.model(email=email, username=username, usertype=usertype,
-                                first_name=first_name, last_name=last_name)
+                                first_name=first_name, last_name=last_name,phone_number=phone_number)
             user.save(using=self._db)
             return user
 
 class RecipientManager(BaseUserManager):
 
-    def create_user(self,email,first_name,last_name,username,usertype, password=None):
+    def create_user(self,email,first_name,last_name,username,usertype,phone_number, password=None):
         # Create and save a regular user with the given email and password
             email = self.normalize_email(email)
             user = self.model(email=email, username=username, usertype=usertype,
-                                first_name=first_name, last_name=last_name)
+                                first_name=first_name, last_name=last_name,phone_number=phone_number)
             user.save(using=self._db)
             return user
             
